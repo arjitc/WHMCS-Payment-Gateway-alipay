@@ -1,3 +1,15 @@
+[Google Translation]
+
+Simple explanation:
+
+Skin path: modules\gateways\class\alipay_full\skin\default
+
+Directly overwrite the modules to the whmcs root directory
+
+---
+
+[Original]
+
 简单说明:
 
 皮肤路径: modules\gateways\class\alipay_full\skin\default
