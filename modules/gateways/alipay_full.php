@@ -9,7 +9,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 function alipay_full_MetaData() {
     return array(
-    'DisplayName' => 'WeLoveIDC - 支付宝全能模块',
+    'DisplayName' => 'AliPay',
     'APIVersion' => '1.1', // Use API Version 1.1
     );
 }
