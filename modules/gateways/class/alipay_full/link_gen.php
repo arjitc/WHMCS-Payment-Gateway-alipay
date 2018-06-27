@@ -10,10 +10,12 @@ class alipayfull_link {
     
     public function get_paylink($params){
         if (!function_exists("openssl_open")){
-            return '<span style="color:red">Fatal Error:管理员未开启openssl组件<br/>正常情况下该组件必须开启<br/>请开启openssl组件解决该问题</span>';
+        	//Fatal Error:管理员未开启openssl组件<br/>正常情况下该组件必须开启<br/>请开启openssl组件解决该问题
+            return '<span style="color:red">PHP OpenSSL Function Missing/Disabled!</span>';
         }
         if (!function_exists("scandir")){
-            return '<span style="color:red">Fatal Error:管理员未开启scandir PHP函数<br/>支付宝Sdk 需要使用该函数<br/>请修改php.ini下的disable_function来解决该问题</span>';
+        	//Fatal Error:管理员未开启scandir PHP函数<br/>支付宝Sdk 需要使用该函数<br/>请修改php.ini下的disable_function来解决该问题
+            return '<span style="color:red">PHP scandir Function Missing/Disabled!</span>';
         }
         $type = Capsule::table("tblpaymentgateways")->where("gateway","alipay_full")->where("setting","apitype")->first();
         $skintype = Capsule::table("tblpaymentgateways")->where("gateway","alipay_full")->where("setting","skintype")->first();
@@ -55,10 +57,12 @@ class alipayfull_link {
         require_once __DIR__ ."/f2fpay/model/builder/AlipayTradePrecreateContentBuilder.php";
         require_once __DIR__ ."/f2fpay/service/AlipayTradeService.php";
         if (empty($params['alipay_key'])){
-            return "管理员未配置 支付宝公钥 , 无法使用该支付接口";
+        	//管理员未配置 支付宝公钥 , 无法使用该支付接口
+            return "Error: AliPay Public Key NOT set!";
         } 
         if (empty($params['rsa_key'])){
-            return "管理员未配置 RSA私钥  , 无法使用该支付接口";
+        	//管理员未配置 RSA私钥  , 无法使用该支付接口
+            return "Error: RSA Private Key NOT set!";
         }
         $qrPayRequestBuilder = new AlipayTradePrecreateContentBuilder();
         $qrPayRequestBuilder->setOutTradeNo("weloveidc".md5(uniqid())."-".$params['invoiceid']);
@@ -70,7 +74,8 @@ class alipayfull_link {
             $qrPay = new AlipayTradeService($this->f2fpay_get_basicconfig($params));
             $qrPayResult = $qrPay->qrPay($qrPayRequestBuilder);
         } catch (Exception $e) {
-            return "管理员模块配置出现问题 <br/> 无法使用该接口(签名不符合)";
+        	//管理员模块配置出现问题 <br/> 无法使用该接口(签名不符合)
+            return "Error: Module Configuration error (signature does not match?!)";
         }
         
         switch ($qrPayResult->getTradeStatus()){
@@ -85,11 +90,14 @@ class alipayfull_link {
                 $skin_raw = str_replace('{$url}',urldecode($qrcode),$skin_raw);
                 return $skin_raw;
             case "FAILED":
-                return "支付宝创建订单二维码失败";
+            	//支付宝创建订单二维码失败
+                return "Error: Failed to create QR code!";
             case "UNKNOWN":
-                return "系统异常，状态未知";
+            	//系统异常，状态未知
+                return "Error: System status related error!";
             default:
-                return "不支持的返回状态，创建订单二维码返回异常";
+            	//不支持的返回状态，创建订单二维码返回异常
+                return "Error: System status related error!";
         }
     }
     
